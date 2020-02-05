@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
-class AddEditForm extends React.Component {
-  state = {
+function AddEditForm(props) {
+  const[form, setValues] = useState({
     id: 0,
     life: '',
     title: '',
-    medium: ''
+    medium: '',
+  })
+
+  const onChange = e => {
+    setValues({
+      ...form,
+      [e.target.name]: e.target.value
+    })
   }
 
-  onChange = e => {
-    this.setState({[e.target.name]: e.target.value})
-  }
-
-  submitFormAdd = e => {
+  const submitFormAdd = e => {
     e.preventDefault()
     fetch('http://localhost:3000/crud', {
       method: 'post',
@@ -21,16 +24,16 @@ class AddEditForm extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        life: this.state.life,
-        title: this.state.title,
-        medium: this.state.medium
+        life: form.life,
+        title: form.title,
+        medium: form.medium
       })
     })
       .then(response => response.json())
       .then(item => {
         if(Array.isArray(item)) {
-          this.props.addItemToState(item[0])
-          this.props.toggle()
+          props.addItemToState(item[0])
+          props.toggle()
         } else {
           console.log('failure')
         }
@@ -38,7 +41,7 @@ class AddEditForm extends React.Component {
       .catch(err => console.log(err))
   }
 
-  submitFormEdit = e => {
+  const submitFormEdit = e => {
     e.preventDefault()
     fetch('http://localhost:3000/crud', {
       method: 'put',
@@ -46,17 +49,17 @@ class AddEditForm extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: this.state.id,
-        life: this.state.life,
-        title: this.state.title,
-        medium: this.state.medium
+        id: form.id,
+        life: form.life,
+        title: form.title,
+        medium: form.medium
       })
     })
       .then(response => response.json())
       .then(item => {
         if(Array.isArray(item)) {
-          this.props.updateState(item[0])
-          this.props.toggle()
+          props.updateState(item[0])
+          props.toggle()
         } else {
           console.log('failure')
         }
@@ -64,33 +67,30 @@ class AddEditForm extends React.Component {
       .catch(err => console.log(err))
   }
 
-  componentDidMount(){
-    // if item exists, populate the state with proper data
-    if(this.props.item){
-      const { id, life, title, medium } = this.props.item
-      this.setState({ id, life, title, medium })
+  useEffect(() => {
+    if(props.item){
+      const { id, life, title, medium } = props.item
+      setValues({ id, life, title, medium })
     }
-  }
+  }, false)
 
-  render() {
     return (
-      <Form onSubmit={this.props.item ? this.submitFormEdit : this.submitFormAdd}>
+      <Form onSubmit={props.item ? submitFormEdit : submitFormAdd}>
         <FormGroup>
           <Label for="life">Life</Label>
-          <Input type="text" name="life" id="life" onChange={this.onChange} value={this.state.life === null ? '' : this.state.life} />
+          <Input type="text" name="life" id="life" onChange={onChange} value={form.life === null ? '' : form.life} />
         </FormGroup>
         <FormGroup>
           <Label for="title">Title</Label>
-          <Input type="text" name="title" id="title" onChange={this.onChange} value={this.state.title === null ? '' : this.state.title}  />
+          <Input type="text" name="title" id="title" onChange={onChange} value={form.title === null ? '' : form.title}  />
         </FormGroup>
         <FormGroup>
           <Label for="medium">Medium</Label>
-          <Input type="text" name="medium" id="medium" onChange={this.onChange} value={this.state.medium === null ? '' : this.state.medium}  />
+          <Input type="text" name="medium" id="medium" onChange={onChange} value={form.medium === null ? '' : form.medium}  />
         </FormGroup>
         <Button>Submit</Button>
       </Form>
-    );
-  }
+    )
 }
 
 export default AddEditForm;

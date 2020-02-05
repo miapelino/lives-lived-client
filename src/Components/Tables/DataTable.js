@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Table, Button } from 'reactstrap';
 import ModalForm from '../Modals/Modal'
 
-class DataTable extends Component {
-
-  deleteItem = id => {
+function DataTable(props) {
+  const deleteItem = id => {
     let confirmDelete = window.confirm('Delete item forever?')
     if(confirmDelete){
       fetch('http://localhost:3000/crud', {
@@ -17,25 +16,22 @@ class DataTable extends Component {
       })
     })
       .then(response => response.json())
-      .then(item => {
-        this.props.deleteItemFromState(id)
-      })
+      .then(item => {props.deleteItemFromState(id)})
       .catch(err => console.log(err))
     }
   }
 
-  render() {
-    const items = this.props.items.map(item => {
-      return (
+  const items = props.items.map(item => {
+    return (
         <tr key={item.id}>
           <td>{item.life}</td>
           <td>{item.title}</td>
           <td>{item.medium}</td>
           <td>
             <div style={{width:"110px"}}>
-              <ModalForm buttonLabel="Edit" item={item} updateState={this.props.updateState}/>
+              <ModalForm buttonLabel="Edit" item={item} updateState={props.updateState}/>
               {' '}
-              <Button color="danger" onClick={() => this.deleteItem(item.id)}>Del</Button>
+              <Button color="danger" onClick={() => deleteItem(item.id)}>Del</Button>
             </div>
           </td>
         </tr>
@@ -56,7 +52,6 @@ class DataTable extends Component {
         </tbody>
       </Table>
     )
-  }
 }
 
 export default DataTable

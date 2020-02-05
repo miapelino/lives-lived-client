@@ -1,65 +1,54 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Col } from 'reactstrap'
 import ModalForm from './Components/Modals/Modal'
 import DataTable from './Components/Tables/DataTable'
 import { CSVLink } from "react-csv"
 
-class App extends Component {
-  state = {
-    items: [],
-    quotes: [],
-    displayQuote: '',
-    displayAuthor: ''
-  }
+function App() {
+  const [items, setItems] = useState([]);
+  const [displayQuote, setDisplayQuote] = useState('');
+  const [displayAuthor, setDisplayAuthor] = useState('');
 
-  getItems(){
+  const getItems = () => {
     fetch('http://localhost:3000/crud')
       .then(response => response.json())
-      .then(items => this.setState({items}))
+      .then(items => setItems(items))
       .catch(err => console.log(err))
   }
 
-  getQuote(){
+  const getQuotes = () => {
     fetch('http://localhost:3000/crud/quote')
       .then(response => response.json())
-      .then(quotes => this.setState({quotes}))
-      .then(() => this.formatQuote(this.state.quotes))
+      .then(quotes => formatQuote(quotes))
       .catch(err => console.log(err))
   }
 
-  formatQuote(quotes){
+  const formatQuote = (quotes) => {
     let randomQuote = quotes[Math.floor(Math.random() * quotes.length)]
-    this.setState({displayAuthor: randomQuote.author})
-    this.setState({displayQuote: randomQuote.quote})
+    setDisplayAuthor(randomQuote.author)
+    setDisplayQuote(randomQuote.quote)
   }
 
-  addItemToState = (item) => {
-    this.setState(prevState => ({
-      items: [...prevState.items, item]
-    }))
+  const addItemToState = (item) => {
+    setItems([...items,item])
   }
 
-  updateState = (item) => {
-    const itemIndex = this.state.items.findIndex(data => data.id === item.id)
-    const newArray = [
-      ...this.state.items.slice(0, itemIndex),
-      item,
-      ...this.state.items.slice(itemIndex + 1)
-    ]
-    this.setState({ items: newArray })
+  const updateState = (item) => {
+    const itemIndex = items.findIndex(data => data.id === item.id)
+    const newArray = [...items.slice(0, itemIndex), item, ...items.slice(itemIndex + 1)]
+    setItems(newArray)
   }
 
-  deleteItemFromState = (id) => {
-    const updatedItems = this.state.items.filter(item => item.id !== id)
-    this.setState({ items: updatedItems })
+  const deleteItemFromState = (id) => {
+    const updatedItems = items.filter(item => item.id !== id)
+    setItems(updatedItems)
   }
 
-  componentDidMount(){
-    this.getItems()
-    this.getQuote()
-  }
+  useEffect(() => {
+    getQuotes()
+    getItems()
+  },  []);
 
-  render() {
     return (
       <Container className="App">
         <Row>
@@ -69,12 +58,12 @@ class App extends Component {
         </Row>
         <Row>
           <Col>
-            <h6 style={{margin: "20px 0", textAlign: "center"}}><i>{this.state.displayQuote}</i><br/>- {this.state.displayAuthor}</h6>
+            <h6 style={{margin: "20px 0", textAlign: "center"}}><i>{displayQuote}</i><br/>- {displayAuthor}</h6>
           </Col>
         </Row>
         <Row>
           <Col>
-            <DataTable items={this.state.items} updateState={this.updateState} deleteItemFromState={this.deleteItemFromState} />
+            <DataTable items={items} updateState={updateState} deleteItemFromState={deleteItemFromState} />
           </Col>
         </Row>
         <Row>
@@ -84,15 +73,14 @@ class App extends Component {
               color="primary"
               style={{float: "left", marginRight: "10px"}}
               className="btn btn-primary"
-              data={this.state.items}>
+              data={items}>
               Download CSV
             </CSVLink>
-            <ModalForm buttonLabel="Add Item" addItemToState={this.addItemToState}/>
+            <ModalForm buttonLabel="Add Item" addItemToState={addItemToState}/>
           </Col>
         </Row>
       </Container>
     )
-  }
 }
 
 export default App;

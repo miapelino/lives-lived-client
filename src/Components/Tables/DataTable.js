@@ -8,12 +8,8 @@ function DataTable(props) {
     if(confirmDelete){
       fetch('http://localhost:3000/crud', {
       method: 'delete',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        id
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
     })
       .then(response => response.json())
       .then(item => {props.deleteItemFromState(id)})
@@ -29,9 +25,9 @@ function DataTable(props) {
           <td>{item.medium}</td>
           <td>
             <div style={{width:"110px"}}>
-              <ModalForm buttonLabel="Edit" item={item} updateState={props.updateState}/>
+              <ModalForm buttonLabel="Edit"  item={item} updateState={props.updateState} />
               {' '}
-              <Button color="danger" onClick={() => deleteItem(item.id)}>Del</Button>
+              <Button outline color="danger" onClick={() => deleteItem(item.id)}>del</Button>
             </div>
           </td>
         </tr>

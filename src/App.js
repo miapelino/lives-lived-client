@@ -54,7 +54,7 @@ function App() {
   return (
     <div>
       <Header displayQuote={displayQuote} displayAuthor={displayAuthor}/>
-      <Container className="App">
+      <Container className="App" style={{margin: "50px 0"}}>
         <Row>
           <Col>
             <DataTable items={items} updateState={updateState} deleteItemFromState={deleteItemFromState} />

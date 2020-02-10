@@ -28,10 +28,10 @@ const Border = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin: auto;
     width: 93%;
     height: 93vh;
     border: 3px solid white;
+    display: flex;
 `
 
 const Heading = styled.h1`
@@ -40,22 +40,35 @@ const Heading = styled.h1`
     font-weight: 900;
     font-size: 90px;
     text-align: center;
-    position: absolute;
-    top: 30%;
-    right: 10%;
+    width: 100%;
+    margin: 20% 5%;
 `
 
-const Quote = styled.h4`
+const QuoteArea = styled.div`
     color: white;
     font-family: garamond;
-    font-weight: bold;
-    margin: auto;
-    text-align: right;
-    padding: 0px 0px 0px 100px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: flex-end;
     position: absolute;
-    right: 10%;
+    right: 7%;
     bottom: 10%;
+`
+
+const Quote = styled.p`
+    margin: 0 0 0 3%;
     text-shadow: 0 0 1px white;
+    text-align: right;
+    flex: 1 1 auto;
+    width: 100%;
+`
+
+const Author = styled.p`
+    margin: auto;
+    text-shadow: 0 0 1px white;
+    text-align: right;
+    flex: 1 1 auto;
+    width: 100%;
 `
 
 export default Header

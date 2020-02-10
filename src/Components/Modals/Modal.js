@@ -19,13 +19,15 @@ function ModalForm(props) {
 
   if(label === 'Edit'){
     button = <Button
-      color="warning"
+      outline
+      color="info"
       onClick={toggle}
       style={{float: "left", marginRight:"10px"}}>{label}
     </Button>
     title = 'Edit Item'
   } else {
     button = <Button
+      outline
       color="success"
       onClick={toggle}
       style={{float: "left", marginRight:"10px"}}>{label}

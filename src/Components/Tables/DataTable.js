@@ -35,12 +35,13 @@ function DataTable(props) {
       })
 
     return (
-      <Table responsive hover>
+      <Table responsive hover borderless striped style={{margin: "", fontSize: "11px"}}>
         <thead>
           <tr>
             <th>Life</th>
             <th>Title</th>
             <th>Medium</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
